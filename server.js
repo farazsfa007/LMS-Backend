@@ -22,14 +22,33 @@ const __dirname = dirname(__filename);
 // Connect to MongoDB
 connectDB();
 
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://capable-cocada-faf6c5.netlify.app',
+  'https://unique-quokka-181f44.netlify.app', // <- NEW one
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+}));
+
 // CORS
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: process.env.FRONTEND_URL,
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     credentials: true,
+//   })
+// );
 
 // Middleware
 app.use(cookieParser());
